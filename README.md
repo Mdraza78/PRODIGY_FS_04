@@ -1,5 +1,7 @@
 # Real Time Chat App | JWT, Socket.io
 
+This project is a real-time chat application built with the MERN stack, featuring secure authentication, private messaging, and a clean, responsive UI.
+
 # Some Features:
 
 🌟 Tech stack: MERN + Socket.io + TailwindCSS + Daisy UI
