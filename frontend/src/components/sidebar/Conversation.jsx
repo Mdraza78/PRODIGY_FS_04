@@ -1,27 +1,53 @@
-const Conversation = () => {
-  return (
-    <>
-      <div className='flex gap-2 items-center hover:bg-sky-500 rounded p-2 py-1 cursor-pointer'>
-        <div className='avatar online'>
-          <div className='w-12 rounded-full'>
-            <img
-              src='https://cdn8.iconfinder.com/data/icons/communication-line-10/24/account_profile_user_contact_person_avatar_placeholder-512.png'
-              alt='user avatar'
-            />
-          </div>
-        </div>
+import useConversation from "../../zustand/useConversation";
+import { useSocketContext } from "../../context/SocketContext";
+import { useState } from "react";
 
-        <div className='flex flex-col flex-1'>
-          <div className='flex gap-3 justify-between'>
-            <p className='font-bold text-gray-200'>John Doe</p>
-            <span className='text-xl'>😊</span>
-          </div>
-        </div>
-      </div>
+const Conversation = ({ conversation, lastIdx, emoji }) => {
+	const { selectedConversation, setSelectedConversation } = useConversation();
+	const [imageError, setImageError] = useState(false);
 
-      <div className='divider my-0 py-0 h-1' />
-    </>
-  );
+	const isSelected = selectedConversation?._id === conversation._id;
+	const { onlineUsers } = useSocketContext();
+	const isOnline = onlineUsers.includes(conversation._id);
+
+	// Fallback avatar based on gender
+	const getFallbackAvatar = () => {
+		return conversation.gender === "male" 
+			? "https://avatar.iran.liara.run/public/boy" 
+			: "https://avatar.iran.liara.run/public/girl";
+	};
+
+	return (
+		<>
+			<div
+				className={`flex gap-2 items-center rounded p-2 py-1 cursor-pointer ${
+					isSelected ? "bg-[#A2B9E7]" : "hover:bg-[#A2B9E7]"
+				}`}
+				onClick={() => setSelectedConversation(conversation)}
+			>
+				<div className={`avatar ${isOnline ? "online" : ""}`}>
+					<div className='w-12 rounded-full'>
+						<img 
+							src={imageError ? getFallbackAvatar() : conversation.profilePic} 
+							alt='user avatar' 
+							onError={() => setImageError(true)}
+							className="border border-slate-300"
+						/>
+					</div>
+				</div>
+
+				<div className='flex flex-col flex-1'>
+					<div className='flex gap-3 justify-between'>
+						<p className={`font-bold text-slate-700 ${isSelected ? 'text-slate-800' : ''}`}>
+							{conversation.fullName}
+						</p>
+						<span className='text-xl text-slate-700'>{emoji}</span>
+					</div>
+				</div>
+			</div>
+			{!lastIdx && <div className='divider my-0 py-0 h-1 bg-slate-300' />}
+		</>
+	);
 };
 
 export default Conversation;
