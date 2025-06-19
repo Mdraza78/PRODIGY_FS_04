@@ -27,12 +27,7 @@ const Conversation = ({ conversation, lastIdx, emoji }) => {
 			>
 				<div className={`avatar ${isOnline ? "online" : ""}`}>
 					<div className='w-12 rounded-full'>
-						<img 
-							src={imageError ? getFallbackAvatar() : conversation.profilePic} 
-							alt='user avatar' 
-							onError={() => setImageError(true)}
-							className="border border-slate-300"
-						/>
+						
 					</div>
 				</div>
 
